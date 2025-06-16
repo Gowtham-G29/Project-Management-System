@@ -4,6 +4,7 @@ package com.g_29.projectManagementSystem.Config;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,15 +22,18 @@ import java.util.Collections;
 @EnableWebSecurity
 public class AppConfig {
 
+    @Bean
      SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity)throws Exception{
 
          httpSecurity.sessionManagement(Management->Management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-         httpSecurity.authorizeHttpRequests(Authorize->Authorize.requestMatchers("/api/**").authenticated()
-                 .anyRequest().permitAll());
+         httpSecurity.authorizeHttpRequests(Authorize->Authorize.
+                 requestMatchers("/register", "/login").permitAll()
+                 .anyRequest().authenticated());
 
          httpSecurity.addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class);
          httpSecurity.csrf(csrf->csrf.disable());
          httpSecurity.cors(cors->cors.configurationSource(corsConfigurationSource()));
+         httpSecurity.httpBasic(Customizer.withDefaults());
 
          return httpSecurity.build();
      }
