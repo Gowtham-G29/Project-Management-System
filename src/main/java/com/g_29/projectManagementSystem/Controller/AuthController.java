@@ -4,7 +4,7 @@ import com.g_29.projectManagementSystem.Config.JwtProvider;
 import com.g_29.projectManagementSystem.DTO.LoginRequest;
 import com.g_29.projectManagementSystem.Response.AuthResponse;
 import com.g_29.projectManagementSystem.Service.CustomUserDetailsImpl;
-import com.g_29.projectManagementSystem.Service.UserService;
+import com.g_29.projectManagementSystem.Service.UserServiceImpl;
 import com.g_29.projectManagementSystem.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -35,7 +35,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse>createUser(@RequestBody User user) throws Exception {
 
-        User isUserExists=userService.findUser(user);
+        User isUserExists=userService.findUserByEmail(user.getEmail());
 
         if(isUserExists!=null){
             throw new Exception("Email already exist please provide another email");

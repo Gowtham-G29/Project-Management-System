@@ -1,22 +1,15 @@
 package com.g_29.projectManagementSystem.Service;
 
-import com.g_29.projectManagementSystem.Repository.UserRepo;
 import com.g_29.projectManagementSystem.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
-public class UserService {
+public interface UserService {
 
-    @Autowired
-    private UserRepo userRepo;
+    User findUserProfileByJwt(String jwt)throws Exception;
 
-    public User findUser(User user){
-        return userRepo.findByEmail(user.getEmail());
-    }
+    User findUserByEmail(String email)throws Exception;
 
-    public User createUser(User user){
-        return userRepo.save(user);
-    }
+    User findUserById(Long userId)throws Exception;
+
+    User updateUserByProjectSize(User user,int number)throws Exception;
 
 }
