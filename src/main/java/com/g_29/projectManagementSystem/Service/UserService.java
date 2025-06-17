@@ -12,4 +12,6 @@ public interface UserService {
 
     User updateUserByProjectSize(User user,int number)throws Exception;
 
+    User createUser(User user);
+
 }

@@ -16,15 +16,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class AuthController {
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserServiceImpl userServiceImpl;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -38,17 +37,18 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse>createUser(@RequestBody User user) throws Exception {
 
-        User isUserExists=userService.findUserByEmail(user.getEmail());
+        User isUserExists= userServiceImpl.findUserByEmail(user.getEmail());
 
         if(isUserExists!=null){
-            throw new Exception("Email already exist please provide another email");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists.");
         }
         User newUser=new User();
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
         newUser.setEmail(user.getEmail());
         newUser.setFullName(user.getFullName());
 
-        User createNewUser=userService.createUser(newUser);
+
+        User createNewUser=userServiceImpl.createUser(newUser);
 
         //enable free subscription plan
         subscriptionServiceImpl.createSubscription(createNewUser);
@@ -89,6 +89,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
 
     }
+
 
     //check the valid user from the db.
     private Authentication authenticate(String userName, String password) {

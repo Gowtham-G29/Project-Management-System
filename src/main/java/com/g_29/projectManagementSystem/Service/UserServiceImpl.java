@@ -23,12 +23,13 @@ public class UserServiceImpl implements UserService{
         return findUserByEmail(email);
     }
 
-    public User findUserByEmail(String email) throws Exception{
-        User user=userRepo.findByEmail(email);
-        if(user==null){
-            throw new Exception("user Not found");
+    @Override
+    public User findUserByEmail(String email) throws Exception {
+        Optional<User> user = userRepo.findByEmail(email);
+        if (user.isPresent()) {
+            return user.get();
         }
-        return user;
+        return null; // Instead of throwing
     }
 
     @Override
@@ -47,6 +48,8 @@ public class UserServiceImpl implements UserService{
         return userRepo.save(user);
     }
 
+
+    @Override
     public User createUser(User user){
         return userRepo.save(user);
     }
