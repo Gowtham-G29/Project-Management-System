@@ -4,6 +4,7 @@ import com.g_29.projectManagementSystem.Config.JwtProvider;
 import com.g_29.projectManagementSystem.DTO.LoginRequest;
 import com.g_29.projectManagementSystem.Response.AuthResponse;
 import com.g_29.projectManagementSystem.Service.CustomUserDetailsImpl;
+import com.g_29.projectManagementSystem.Service.SubscriptionServiceImpl;
 import com.g_29.projectManagementSystem.Service.UserServiceImpl;
 import com.g_29.projectManagementSystem.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class AuthController {
     @Autowired
     private CustomUserDetailsImpl customUserDetails;
 
+    @Autowired
+    private SubscriptionServiceImpl subscriptionServiceImpl;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse>createUser(@RequestBody User user) throws Exception {
@@ -46,6 +49,10 @@ public class AuthController {
         newUser.setFullName(user.getFullName());
 
         User createNewUser=userService.createUser(newUser);
+
+        //enable free subscription plan
+        subscriptionServiceImpl.createSubscription(createNewUser);
+
         Authentication authentication=new UsernamePasswordAuthenticationToken(createNewUser.getEmail(),createNewUser.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
