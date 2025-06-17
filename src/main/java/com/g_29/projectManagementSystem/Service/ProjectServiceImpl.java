@@ -79,6 +79,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     }
 
+    @Override
+    public Project deleteProject(Long projectId, Long userId) throws Exception {
+        return null;
+    }
 
 
     @Override
@@ -137,4 +141,6 @@ public class ProjectServiceImpl implements ProjectService {
         List<Project>projects=projectRepo.findByNameContainingAndTeamContains(keyword,user);
         return projects;
     }
+
+
 }
