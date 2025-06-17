@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/comment")
+@RequestMapping("/api/comments")
 public class CommentController {
 
     @Autowired
@@ -46,7 +46,7 @@ public class CommentController {
 
         MessageResponse response=new MessageResponse();
         response.setMessage("Comment deleted Successfully");
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
 
