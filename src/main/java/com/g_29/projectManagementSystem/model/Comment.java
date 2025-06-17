@@ -23,6 +23,8 @@ public class Comment {
     @ManyToOne
     private User user;
 
-    @OneToMany
+    @ManyToOne
+    @JoinColumn(name = "issue_id")
     private Issue issue;
+
 }

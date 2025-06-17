@@ -34,7 +34,7 @@ public class IssueServiceImpl implements IssueService{
 
     @Override
     public List<Issue> getIssueByProjectId(Long projectId) throws Exception {
-        return issueRepo.findByProjectId(projectId);
+        return issueRepo.findByProject_Id(projectId);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class IssueServiceImpl implements IssueService{
         issue.setTitle(issueRequest.getTitle());
         issue.setDescription(issueRequest.getDescription());
         issue.setStatus(issueRequest.getStatus());
-        issue.setProjectId(issueRequest.getProjectId());
+//        issue.setProjectId(issueRequest.getProjectId());
         issue.setPriority(issueRequest.getPriority());
         issue.setDueDate(issueRequest.getDueDate());
 
