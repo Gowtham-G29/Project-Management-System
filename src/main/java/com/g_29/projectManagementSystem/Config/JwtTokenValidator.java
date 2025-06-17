@@ -2,6 +2,7 @@ package com.g_29.projectManagementSystem.Config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,32 +23,39 @@ import java.util.List;
 public class JwtTokenValidator extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-         String jwt=request.getHeader(JwtConstants.JWT_HEADER);
-         if(jwt!=null){
-             jwt=jwt.substring(7);
-             try{
-                 SecretKey key= Keys.hmacShaKeyFor(JwtConstants.SECREAT_KEY.getBytes());
-                 Claims claim= Jwts.parser().setSigningKey(key).build().parseSignedClaims(jwt).getBody();
+        String jwt = request.getHeader(JwtConstants.JWT_HEADER);
 
-                 String email=String.valueOf(claim.get("email"));
-                 String authorities=String.valueOf(claim.get("authorities"));
+        if (jwt != null && jwt.startsWith("Bearer ")) {
+            jwt = jwt.substring(7).trim();
 
-                 //converted the extracted authorities into the grantedAuthority type
-                 List<GrantedAuthority>authorityList= AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
+            try {
+                if (jwt.contains(" ")) {
+                    throw new BadCredentialsException("JWT should not contain whitespace");
+                }
 
-                 Authentication authentication=new UsernamePasswordAuthenticationToken(email,null,authorityList);
+                SecretKey key = Keys.hmacShaKeyFor(JwtConstants.SECREAT_KEY.getBytes());
+                Claims claim = Jwts.parser().setSigningKey(key).build().parseSignedClaims(jwt).getBody();
 
-                 //set the Authentication object inside the SecurityContext
-                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                String email = String.valueOf(claim.get("email"));
+                String authorities = String.valueOf(claim.get("authorities"));
 
-             }catch (Exception e){
+                List<GrantedAuthority> authorityList = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
 
-                 throw new BadCredentialsException("Invalid Credentials");
-             }
-         }
+                Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, authorityList);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
 
-         filterChain.doFilter(request,response);
+            } catch (MalformedJwtException e) {
+                System.err.println("Malformed JWT: " + jwt);
+                throw new BadCredentialsException("Malformed JWT token", e);
+            } catch (Exception e) {
+                throw new BadCredentialsException("Invalid Credentials", e);
+            }
+        }
+
+        filterChain.doFilter(request, response);
     }
+
 }
