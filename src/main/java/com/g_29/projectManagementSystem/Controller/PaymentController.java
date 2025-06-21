@@ -28,11 +28,11 @@ public class PaymentController {
 
     @PostMapping("/{planType}")
     public ResponseEntity<PaymentLinkResponse>createPayLink(@PathVariable PlanType planType,
-                                                            @RequestHeader("AUTHORIZATION") String jwt) throws Exception {
+                                                            @RequestHeader("Authorization") String jwt) throws Exception {
         User user=userServiceImpl.findUserProfileByJwt(jwt);
 
         //paisa to ruppee
-        int amount=799*100;
+        int amount=1*100;
         if(planType.equals(PlanType.ANNUALLY)){
             amount=amount*12;
             amount=(int)(amount*0.7);
@@ -55,7 +55,7 @@ public class PaymentController {
 
             paymentLinkRequest.put("notify",notify);
 
-            paymentLinkRequest.put("callback_url","http://localhost:5173/upgrade_plan/success?planType"+planType);
+            paymentLinkRequest.put("callback_url","http://localhost:5173/upgrade_plan/success?planType="+planType);
 
             PaymentLink payment= razorpayClient.paymentLink.create(paymentLinkRequest);
 

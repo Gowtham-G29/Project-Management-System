@@ -22,6 +22,7 @@ public class Project {
     private String name;
     private String description;
     private String category;
+    private String status;
 
     private List<String> tags=new ArrayList<>();
 

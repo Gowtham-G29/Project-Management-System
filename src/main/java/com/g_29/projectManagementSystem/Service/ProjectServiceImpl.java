@@ -34,6 +34,7 @@ public class ProjectServiceImpl implements ProjectService {
         createProject.setName(project.getName());
         createProject.setCategory(project.getCategory());
         createProject.setDescription(project.getDescription());
+        createProject.setStatus(project.getStatus());
         createProject.getTeam().add(user);
 
         Project savedProject=projectRepo.save(createProject);
