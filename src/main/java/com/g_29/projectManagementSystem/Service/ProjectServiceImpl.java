@@ -101,7 +101,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setName(updatedProject.getName());
         project.setDescription(updatedProject.getDescription());
         project.setTags(updatedProject.getTags());
-
+        project.setStatus(updatedProject.getStatus());
         return projectRepo.save(project);
     }
 
@@ -141,6 +141,13 @@ public class ProjectServiceImpl implements ProjectService {
     public List<Project> searchProjects(String keyword, User user) throws Exception {
         List<Project>projects=projectRepo.findByNameContainingAndTeamContains(keyword,user);
         return projects;
+    }
+
+    @Override
+    public Project updateProjectStatus(Long projectId, String status) throws Exception {
+        Project updatedProject=getProjectById(projectId);
+        updatedProject.setStatus(status);
+        return projectRepo.save(updatedProject);
     }
 
 

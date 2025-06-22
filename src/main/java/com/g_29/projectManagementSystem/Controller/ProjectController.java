@@ -128,6 +128,12 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(invitation);
     }
 
+    @PutMapping("/update/{projectId}")
+    public ResponseEntity<Project>updateProjectStatus(@RequestParam String status,@PathVariable Long projectId)throws Exception{
+        Project updatedProject=projectServiceImpl.updateProjectStatus(projectId,status);
+        return ResponseEntity.status(200).body(updatedProject);
+    }
+
 
 
 
