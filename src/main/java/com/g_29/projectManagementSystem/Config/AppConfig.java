@@ -46,7 +46,7 @@ public class AppConfig {
              @Override
              public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                  CorsConfiguration configuration=new CorsConfiguration();
-                 configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
+                 configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173","https://plannestor.netlify.app/"));
 
                  configuration.setAllowedMethods(Collections.singletonList("*"));
                  configuration.setAllowCredentials(true);
